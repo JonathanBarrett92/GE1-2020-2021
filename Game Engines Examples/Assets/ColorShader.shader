@@ -121,13 +121,18 @@ Shader "Custom/CreatureColours" {
 
 		void surf (Input IN, inout SurfaceOutputStandard o) {
 			// Albedo comes from a texture tinted by color
-			float u,v;			
-			u = abs(IN.worldPos.x / _PositionScale);
-			//u -= (int)u;
-            v = abs(IN.worldPos.z / _PositionScale);
-			//v -= (int)v;
-			fixed4 c = tex2D (_MainTex, float2(u,v));
-			o.Albedo = c.rgb;
+			float dist = sqrt(pow(IN.worldPos.x, 2) + pow(IN.worldPos.z, 2));
+            float hue = abs(((dist / 10.0f) - _Time)) % 1.0;
+			fixed3 c = hsv_to_rgb(float3(hue, 1, 1));
+            o.Albedo = c.rgb;
+
+			// float u,v;			
+			// u = abs(5*IN.worldPos.x / _PositionScale);
+			// //u -= (int)u;
+            // v = abs(5*IN.worldPos.z / _PositionScale);
+			// //v -= (int)v;
+			// fixed4 c = tex2D (_MainTex, float2(u,v));
+			// o.Albedo = c.rgb;
 
 			// Metallic and smoothness come from slider variables
 			o.Metallic = _Metallic;
